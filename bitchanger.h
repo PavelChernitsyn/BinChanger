@@ -22,8 +22,9 @@ public:
     Q_INVOKABLE QString get_bin_str_num() const;
     Q_INVOKABLE QString get_hex_str_num() const;
     Q_INVOKABLE void inverse();
-    Q_INVOKABLE void on_bit(QString);
-    Q_INVOKABLE void off_bit(QString);
+//    Q_INVOKABLE void on_bit(QString);
+//    Q_INVOKABLE void off_bit(QString);
+    Q_INVOKABLE bool on_off_bit(QString);
     Q_INVOKABLE void sum_from_file(QString);
 
 signals:

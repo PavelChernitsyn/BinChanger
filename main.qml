@@ -45,14 +45,35 @@ Window {
 
         //Output
         RowLayout {
-            Label {
-                text: "Output:"
-            }
+//            Label {
+//                text: "Output:"
+//            }
             Label {
                 id: label_bit_str
-                font.pixelSize: 25
+                font.pixelSize: 50
                 text: bit_changer.get_bin_str_num()
             }
+        }
+
+        RowLayout {
+//            Row {
+                Repeater {
+                    id: repeater
+                    model: 8
+                    Rectangle {
+                        width: 24
+                        height: width
+                        radius: width/2
+                        color: "red"
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                color = bit_changer.on_off_bit(index) ? "green" : "red"
+                            }
+                        }
+                    }
+                }
+//            }
         }
 
         // Buttons Inverse and SumFromFile
@@ -68,28 +89,28 @@ Window {
         }
 
         // on/off bits
-        RowLayout {
-            Label {
-                text: "Bit num(0-7):"
-            }
+//        RowLayout {
+//            Label {
+//                text: "Bit num(0-7):"
+//            }
 
-            TextField {
-                id: bit_num
-                implicitWidth: 50
-                validator: RegExpValidator {
-                    regExp: /[0-7]{1}/
-                }
-            }
+//            TextField {
+//                id: bit_num
+//                implicitWidth: 50
+//                validator: RegExpValidator {
+//                    regExp: /[0-7]{1}/
+//                }
+//            }
 
-            Button {
-                text: "On"
-                onClicked: bit_changer.on_bit(bit_num.text)
-            }
-            Button {
-                text: "Off"
-                onClicked: bit_changer.off_bit(bit_num.text)
-            }
-        }
+//            Button {
+//                text: "On"
+//                onClicked: bit_changer.on_bit(bit_num.text)
+//            }
+//            Button {
+//                text: "Off"
+//                onClicked: bit_changer.off_bit(bit_num.text)
+//            }
+//        }
     }
 
     FileDialog {

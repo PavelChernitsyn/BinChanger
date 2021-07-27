@@ -67,28 +67,49 @@ void BitChanger::inverse()
     upd_hex_str();
 }
 
-void BitChanger::on_bit(QString text)
-{
-    if (text.isEmpty()) return;
+//void BitChanger::on_bit(QString text)
+//{
+//    if (text.isEmpty()) return;
 
+//    uint index = text.toUInt(nullptr, 10);
+//    uint mask = 1 << index;
+//    number = number | mask;
+//    upd_bit_str();
+//    upd_hex_str();
+//}
+
+//void BitChanger::off_bit(QString text)
+//{
+//    if (text.isEmpty()) return;
+
+//    uint index = text.toUInt(nullptr, 10);
+//    uint mask = 1 << index;
+//    mask = ~mask;
+//    mask = mask & 255;
+//    number = number & mask;
+//    upd_bit_str();
+//    upd_hex_str();
+//}
+
+bool BitChanger::on_off_bit(QString text)
+{
     uint index = text.toUInt(nullptr, 10);
+    index = 7 - index; //сопоставление элемента repeater нужному биту
     uint mask = 1 << index;
-    number = number | mask;
+    bool flag; //true, если бит изменен на вкл, false если на выкл
+
+    if(number & mask) {
+        mask = ~mask;
+        mask = mask & 255;
+        number = number & mask;
+        flag = false;
+    } else {
+        number = number | mask;
+        flag = true;
+    }
     upd_bit_str();
     upd_hex_str();
-}
-
-void BitChanger::off_bit(QString text)
-{
-    if (text.isEmpty()) return;
-
-    uint index = text.toUInt(nullptr, 10);
-    uint mask = 1 << index;
-    mask = ~mask;
-    mask = mask & 255;
-    number = number & mask;
-    upd_bit_str();
-    upd_hex_str();
+    return flag;
 }
 
 void BitChanger::sum_from_file(QString filepath)
