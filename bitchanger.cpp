@@ -10,18 +10,18 @@ BitChanger::BitChanger(QObject *parent) : QObject(parent), number(0)
 void BitChanger::upd_bit_str()
 {
     uint tmp = number;
-    bit_str.clear();
+    bit_str_.clear();
     while(tmp)
     {
         if (tmp & 1)
-            bit_str.push_front('1');
+            bit_str_.push_front('1');
         else
-            bit_str.push_front('0');
+            bit_str_.push_front('0');
         tmp >>= 1;
     }
 
     //заполняем оставшиеся биты нулями
-    while(bit_str.size() != 8) bit_str.push_front('0');
+    while(bit_str_.size() != 8) bit_str_.push_front('0');
 
     emit bit_strChanged();
 
@@ -31,31 +31,31 @@ void BitChanger::upd_bit_str()
 void BitChanger::upd_hex_str()
 {
     if (number == 0){
-        hex_str = "0";
+        hex_str_ = "0";
         emit hex_strChanged();
         return;
     }
 
     QString alphabet = "0123456789ABCDEF";
     uint tmp = number;
-    hex_str.clear();
+    hex_str_.clear();
     while(tmp)
     {
-        hex_str.push_front(alphabet[tmp & 15]);
+        hex_str_.push_front(alphabet[tmp & 15]);
         tmp >>= 4;
     }
 
     emit hex_strChanged();
 }
 
-QString BitChanger::get_bin_str_num() const
+QString BitChanger::bit_str() const
 {
-    return bit_str;
+    return bit_str_;
 }
 
-QString BitChanger::get_hex_str_num() const
+QString BitChanger::hex_str() const
 {
-    return hex_str;
+    return hex_str_;
 }
 
 void BitChanger::inverse()
@@ -66,30 +66,6 @@ void BitChanger::inverse()
     upd_bit_str();
     upd_hex_str();
 }
-
-//void BitChanger::on_bit(QString text)
-//{
-//    if (text.isEmpty()) return;
-
-//    uint index = text.toUInt(nullptr, 10);
-//    uint mask = 1 << index;
-//    number = number | mask;
-//    upd_bit_str();
-//    upd_hex_str();
-//}
-
-//void BitChanger::off_bit(QString text)
-//{
-//    if (text.isEmpty()) return;
-
-//    uint index = text.toUInt(nullptr, 10);
-//    uint mask = 1 << index;
-//    mask = ~mask;
-//    mask = mask & 255;
-//    number = number & mask;
-//    upd_bit_str();
-//    upd_hex_str();
-//}
 
 bool BitChanger::on_off_bit(QString text)
 {

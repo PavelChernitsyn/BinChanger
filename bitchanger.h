@@ -8,22 +8,22 @@
 class BitChanger : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString bit_str READ bit_str WRITE set_number NOTIFY bit_strChanged)
+    Q_PROPERTY(QString hex_str READ hex_str WRITE set_number NOTIFY hex_strChanged)
 
 private:
     uint number;
-    QString bit_str;
-    QString hex_str;
+    QString bit_str_;
+    QString hex_str_;
 
     void upd_bit_str();
     void upd_hex_str();
 
 public:
     explicit BitChanger(QObject *parent = nullptr);
-    Q_INVOKABLE QString get_bin_str_num() const;
-    Q_INVOKABLE QString get_hex_str_num() const;
+    /*Q_INVOKABLE*/ QString bit_str() const;
+    /*Q_INVOKABLE*/ QString hex_str() const;
     Q_INVOKABLE void inverse();
-//    Q_INVOKABLE void on_bit(QString);
-//    Q_INVOKABLE void off_bit(QString);
     Q_INVOKABLE bool on_off_bit(QString);
     Q_INVOKABLE void sum_from_file(QString);
 
