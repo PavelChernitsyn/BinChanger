@@ -63,13 +63,15 @@ void BitChanger::inverse()
 //    qDebug() << "inverse: " << number << " -> " << (~number & 255);
     number = ~number;
     number = number & 255;
-    upd_bit_str();
+//    upd_bit_str();
+    /*  upd_hex_str отправляет сигнал о том, что число поменялось *
+     *  TextField.onChanged испускает сигнал об этом,             *
+     *  вызывается set_number, который нам поменяет bin строку    */
     upd_hex_str();
 }
 
-bool BitChanger::on_off_bit(QString text)
+bool BitChanger::on_off_bit(int index)
 {
-    uint index = text.toUInt(nullptr, 10);
     index = 7 - index; //сопоставление элемента repeater нужному биту
     uint mask = 1 << index;
     bool flag; //true, если бит изменен на вкл, false если на выкл
@@ -83,7 +85,10 @@ bool BitChanger::on_off_bit(QString text)
         number = number | mask;
         flag = true;
     }
-    upd_bit_str();
+//    upd_bit_str();
+    /*  upd_hex_str отправляет сигнал о том, что число поменялось *
+     *  TextField.onChanged испускает сигнал об этом,             *
+     *  вызывается set_number, который нам поменяет bin строку    */
     upd_hex_str();
     return flag;
 }
@@ -124,8 +129,20 @@ void BitChanger::sum_from_file(QString filepath)
     }
 
     number = tmp & 255;
-    upd_bit_str();
+//    upd_bit_str();
+    /*  upd_hex_str отправляет сигнал о том, что число поменялось *
+     *  TextField.onChanged испускает сигнал об этом,             *
+     *  вызывается set_number, который нам поменяет bin строку    */
     upd_hex_str();
+}
+
+bool BitChanger::get_bit_state(int index) const
+{
+    index = 7 - index;
+    uint mask = 1 << index;
+
+    if(number & mask) return true;
+    return false;
 }
 
 void BitChanger::set_number(QString text)

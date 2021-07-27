@@ -24,8 +24,9 @@ public:
     /*Q_INVOKABLE*/ QString bit_str() const;
     /*Q_INVOKABLE*/ QString hex_str() const;
     Q_INVOKABLE void inverse();
-    Q_INVOKABLE bool on_off_bit(QString);
+    Q_INVOKABLE bool on_off_bit(int);
     Q_INVOKABLE void sum_from_file(QString);
+    Q_INVOKABLE bool get_bit_state(int) const;
 
 signals:
     void bit_strChanged();

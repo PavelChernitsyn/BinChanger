@@ -19,7 +19,11 @@ Window {
 
     Connections {
         target: bit_changer
-        function onBit_strChanged() {label_bit_str.text = bit_changer.bit_str}
+        function onBit_strChanged() {
+            label_bit_str.text = bit_changer.bit_str
+            for (let i = 0; i < repeater.count; ++i)
+                repeater.itemAt(i).color = bit_changer.get_bit_state(i) ? "green" : "red"
+        }
         function onHex_strChanged() {input.text = bit_changer.hex_str}
     }
 
