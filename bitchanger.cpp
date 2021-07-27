@@ -1,7 +1,7 @@
 #include "bitchanger.h"
 #include <QDebug>
 
-BitChanger::BitChanger(QObject *parent) : QObject(parent), number(0)
+BitChanger::BitChanger(QObject *parent) : QObject(parent), number_(0)
 {
     upd_bit_str();
     upd_hex_str();
@@ -9,7 +9,7 @@ BitChanger::BitChanger(QObject *parent) : QObject(parent), number(0)
 
 void BitChanger::upd_bit_str()
 {
-    uint tmp = number;
+    uint tmp = number_;
     bit_str_.clear();
     while(tmp)
     {
@@ -30,14 +30,14 @@ void BitChanger::upd_bit_str()
 
 void BitChanger::upd_hex_str()
 {
-    if (number == 0){
+    if (number_ == 0){
         hex_str_ = "0";
         emit hex_strChanged();
         return;
     }
 
     QString alphabet = "0123456789ABCDEF";
-    uint tmp = number;
+    uint tmp = number_;
     hex_str_.clear();
     while(tmp)
     {
@@ -61,8 +61,8 @@ QString BitChanger::hex_str() const
 void BitChanger::inverse()
 {
 //    qDebug() << "inverse: " << number << " -> " << (~number & 255);
-    number = ~number;
-    number = number & 255;
+    number_ = ~number_;
+    number_ = number_ & 255;
 //    upd_bit_str();
     /*  upd_hex_str отправляет сигнал о том, что число поменялось *
      *  TextField.onChanged испускает сигнал об этом,             *
@@ -76,13 +76,13 @@ bool BitChanger::on_off_bit(int index)
     uint mask = 1 << index;
     bool flag; //true, если бит изменен на вкл, false если на выкл
 
-    if(number & mask) {
+    if(number_ & mask) {
         mask = ~mask;
         mask = mask & 255;
-        number = number & mask;
+        number_ = number_ & mask;
         flag = false;
     } else {
-        number = number | mask;
+        number_ = number_ | mask;
         flag = true;
     }
 //    upd_bit_str();
@@ -104,31 +104,28 @@ void BitChanger::sum_from_file(QString filepath)
 
     QTextStream in(&file);
 
-    size_t i = 0;
-    uint tmp = number;
+    uint tmp = number_;
+    uint next_num;
     bool ok;
-    while (i != 3 && !in.atEnd())
+
+    QString text = in.readAll();
+    QStringList arr_num = text.split(QRegExp("\\s+"));
+
+    for (auto it = arr_num.begin(); it != --arr_num.end(); ++it)
+    // до --end() потому что последний элемент arr_num всегда ""
     {
-        QString line = in.readLine();
-        uint next_num = line.toUInt(&ok, 10);
-        if (!ok || next_num > 100)
+        next_num = (*it).toUInt(&ok, 10);
+        if (!ok)
         {
             qDebug() << "Incorrect numbers in file!";
             return;
         }
         tmp += next_num;
-        ++i;
     }
 
     file.close();
 
-    if (i != 3) //значит в файле было меньше 3 чисел
-    {
-        qDebug() << "<3 numbers in file!";
-        return;
-    }
-
-    number = tmp & 255;
+    number_ = tmp & 255;
 //    upd_bit_str();
     /*  upd_hex_str отправляет сигнал о том, что число поменялось *
      *  TextField.onChanged испускает сигнал об этом,             *
@@ -141,14 +138,14 @@ bool BitChanger::get_bit_state(int index) const
     index = 7 - index;
     uint mask = 1 << index;
 
-    if(number & mask) return true;
+    if(number_ & mask) return true;
     return false;
 }
 
 void BitChanger::set_number(QString text)
 {
     bool ok;
-    number = text.toUInt(&ok, 16);
+    number_ = text.toUInt(&ok, 16);
     upd_bit_str();
 //    qDebug() << "Text = " << text << " -> " << number;
 }

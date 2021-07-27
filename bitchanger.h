@@ -12,7 +12,7 @@ class BitChanger : public QObject
     Q_PROPERTY(QString hex_str READ hex_str WRITE set_number NOTIFY hex_strChanged)
 
 private:
-    uint number;
+    uint number_;
     QString bit_str_;
     QString hex_str_;
 
